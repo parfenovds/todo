@@ -1,6 +1,3 @@
-drop table task;
-
-
 INSERT INTO users (username, password, role)
 VALUES ('MrPotter', '{noop}123', 'USER');
 INSERT INTO node_type (type)
