@@ -8,10 +8,14 @@ import org.springframework.stereotype.Component;
 public class TaskReadMapper implements Mapper<Task, TaskReadDto> {
     @Override
     public TaskReadDto map(Task object) {
+        Long parentId = null;
+        if(object.getParent() != null) {
+            parentId = object.getParent().getId();
+        }
         return TaskReadDto.builder()
                 .nodeId(object.getId())
                 .userId(object.getUser().getId())
-                .parentId(object.getParent().getId())
+                .parentId(parentId)
                 .name(object.getName())
                 .text(object.getText())
                 .type(object.getType().name())

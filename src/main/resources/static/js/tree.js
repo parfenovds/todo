@@ -129,17 +129,14 @@ treeJSON = d3.json(addr, function (error, treeData) {
         .append("button")
         .html("addNode")
         .attr("class", "rightButton")
-        .attr("data-title", "Click on the node for which you want to create a child. Then click the button. Restrictions:\n" +
-            "- any number of answer nodes can be created for the start and question nodes, but other child nodes are prohibited;\n" +
-            "- for the answer node, only one child node can be created: question, fail or win;\n" +
-            "- it is not possible to create child nodes for win and fail nodes.")
+        .attr("data-title", "Кликни на ноду, для которой нужно сделать дочернюю ноду, а следом нажми эту кнопку.")
         .on("click", addNode);
 
     d3.select("#rightDiv")
         .append("button")
         .html("removeNode")
         .attr("class", "rightButton")
-        .attr("data-title", "Click on the node you'd like to remove and then click this button. Starting node cannot be removed!")
+        .attr("data-title", "Кликни на ноду, которую хочешь удалить, а затем на эту кнопку. Корневая нода не может быть удалена!")
         .on("click", removeNode);
 
     // d3.select("#rightDiv")
@@ -167,13 +164,13 @@ treeJSON = d3.json(addr, function (error, treeData) {
         .append("button")
         .html("toggleNode")
         .attr("class", "rightButton")
-        .attr("data-title", "Open or close the node")
+        .attr("data-title", "Показать или спрятать дочерние ноды")
         .on("click", toggleChildren);
 
     d3.select("#rightDiv")
         .append("p")
         .attr("class", "rightButton")
-        .attr("data-title", "Short name of Node")
+        .attr("data-title", "Краткое имя ноды")
         .text("Короткое имя ноды");
 
     d3.select("#rightDiv")
@@ -192,7 +189,7 @@ treeJSON = d3.json(addr, function (error, treeData) {
     d3.select("#rightDiv")
         .append("p")
         .attr("class", "rightButton")
-        .attr("data-title", "Full text of the Node")
+        .attr("data-title", "Полный текст ноды")
         .text("Текст ноды");
 
     d3.select("#rightDiv")
@@ -206,7 +203,7 @@ treeJSON = d3.json(addr, function (error, treeData) {
     d3.select("#rightDiv")
         .append("p")
         .attr("class", "rightButton")
-        .attr("data-title", "Is your task done?")
+        .attr("data-title", "Завершена ли таска?")
         .text("Done?");
 
     d3.select("#rightDiv")
@@ -330,7 +327,9 @@ treeJSON = d3.json(addr, function (error, treeData) {
                 body: myvar
             });
             console.log(newObj);
-            nodeBillet.nodeId = await newObj.json();
+            let nodeIdFromDb = await newObj.json();
+            nodeBillet.nodeId = nodeIdFromDb;
+            nodeBillet.name += nodeIdFromDb;
             // if (lastSelectedNodeData.type === 'init' || lastSelectedNodeData.type === 'question') {
             //     str = 'answer';
             // } else {
