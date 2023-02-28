@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -56,6 +58,28 @@ public class UserService implements UserDetailsService {
                         .id(user.getId())
                         .username(user.getUsername())
                         .build());
+    }
+
+    public List<UserReadDto> findAll() {
+        return userRepository.findAll().stream()
+                .map(user -> UserReadDto.builder()
+                        .id(user.getId())
+                        .username(user.getUsername())
+                        .build()
+                )
+                .collect(Collectors.toList());
+    }
+
+    public Optional<UserReadDto> findById(Long id) {
+        return userRepository.findById(id).map(user -> UserReadDto.builder()
+                        .id(user.getId())
+                        .username(user.getUsername())
+                        .build());
+    }
+
+
+    public void delete(Long id) {
+        userRepository.deleteById(id);
     }
 }
 
