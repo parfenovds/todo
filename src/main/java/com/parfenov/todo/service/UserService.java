@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-//@Transactional(readOnly = true)
 @Transactional
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
@@ -28,6 +27,7 @@ public class UserService implements UserDetailsService {
     private final UserReadMapper userReadMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
                 .map(user -> new User(
@@ -43,6 +43,7 @@ public class UserService implements UserDetailsService {
         return userReadMapper.map(userRepository.save(map));
     }
 
+    @Transactional(readOnly = true)
     public UserReadDto findUserReadDtoByUsername(String username) {
         return userRepository.findByUsername(username)
                 .map(user -> UserReadDto.builder()
@@ -51,7 +52,7 @@ public class UserService implements UserDetailsService {
                         .build())
                 .orElseThrow(() -> new UsernameNotFoundException("Failed to retrieve user: " + username));
     }
-
+    @Transactional(readOnly = true)
     public Optional<UserReadDto> findOptionalUserReadDtoByUsername(String username) {
         return userRepository.findByUsername(username)
                 .map(user -> UserReadDto.builder()
@@ -59,7 +60,7 @@ public class UserService implements UserDetailsService {
                         .username(user.getUsername())
                         .build());
     }
-
+    @Transactional(readOnly = true)
     public List<UserReadDto> findAll() {
         return userRepository.findAll().stream()
                 .map(user -> UserReadDto.builder()
@@ -69,7 +70,7 @@ public class UserService implements UserDetailsService {
                 )
                 .collect(Collectors.toList());
     }
-
+    @Transactional(readOnly = true)
     public Optional<UserReadDto> findById(Long id) {
         return userRepository.findById(id).map(user -> UserReadDto.builder()
                         .id(user.getId())

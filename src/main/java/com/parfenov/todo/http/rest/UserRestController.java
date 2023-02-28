@@ -1,4 +1,4 @@
-package com.parfenov.todo.http.REST;
+package com.parfenov.todo.http.rest;
 
 import com.parfenov.todo.dto.UserReadDto;
 import com.parfenov.todo.service.UserService;

@@ -1,4 +1,4 @@
-package com.parfenov.todo.http.REST;
+package com.parfenov.todo.http.rest;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.parfenov.todo.dto.TaskCreateEditDto;
@@ -40,6 +40,6 @@ public class TaskRestController {
     @PostMapping("/json")
     @ResponseBody
     public ObjectNode sendData(@RequestBody Map<String, Long> map) {
-        return taskService.getJson(map.get("questId"));
+        return taskService.getTreeOfAllTasksOfUser(map.get("questId"));
     }
 }

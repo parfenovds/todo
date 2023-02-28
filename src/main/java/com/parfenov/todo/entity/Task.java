@@ -3,7 +3,6 @@ package com.parfenov.todo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;
 @Data
 @ToString
 @EqualsAndHashCode(of = "id")
@@ -22,8 +21,6 @@ public class Task implements BaseEntity<Long> {
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Task parent;
-//    @OneToMany(mappedBy = "parent")
-//    private Set<Task> children;
     private String name;
     private String text;
     @Enumerated(EnumType.STRING)

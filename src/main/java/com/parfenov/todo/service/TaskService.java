@@ -10,6 +10,7 @@ import com.parfenov.todo.entity.Task;
 import com.parfenov.todo.mapper.TaskMapper;
 import com.parfenov.todo.mapper.TaskReadMapper;
 import com.parfenov.todo.repository.TaskRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +25,8 @@ public class TaskService {
     private final TaskMapper taskMapper;
     private final TaskReadMapper taskReadMapper;
 
-    @Transactional
-    public ObjectNode getJson(Long id) {
+    @Transactional(readOnly = true)
+    public ObjectNode getTreeOfAllTasksOfUser(Long id) {
         JsonNodeFactory factory = new JsonNodeFactory(false);
         List<Task> tasks = taskRepository.getAllTasksByUserId(id);
         ListIterator<Task> iterator = tasks.listIterator();
@@ -63,59 +64,25 @@ public class TaskService {
     }
 
     @Transactional
-    public void saveAll(TaskCreateEditDto task) {
-        List<Task> entities = extractChanged(task);
-        Map<Long, Long> oldIdToNewId = new HashMap<>();
-        for (Task entity : entities) {
-            Long foundParentId = entity.getParent().getId();
-            if (foundParentId < 0L) {
-                Long idFromDb = oldIdToNewId.get(foundParentId);
-                entity.setParent(taskRepository.findById(idFromDb).get());
-            }
-            Long id = entity.getId();
-            Task savedTask = taskRepository.save(entity);
-            if (!Objects.equals(id, savedTask.getId())) {
-                oldIdToNewId.put(id, savedTask.getId());
-            }
-        }
-    }
-
-    public List<Task> extractChanged(TaskCreateEditDto task) {
-        List<Task> result = new ArrayList<>();
-        getAll(task, result);
-        return result;
-    }
-
-    private void getAll(TaskCreateEditDto task, List<Task> result) {
-        if (task.getChanged()) {
-            result.add(taskMapper.map(task));
-        }
-        Set<TaskCreateEditDto> children = task.getChildren();
-        children.forEach(c -> {
-            if (c.getChanged()) {
-                result.add(taskMapper.map(c));
-            }
-            Set<TaskCreateEditDto> children1 = c.getChildren();
-            children1.forEach(c1 -> getAll(c1, result));
-        });
-    }
-
     public Task create(TaskCreateEditDto task) {
         return taskRepository.save(taskMapper.map(task));
     }
 
+    @Transactional
     public void delete(Long id) {
         taskRepository.deleteById(id);
     }
 
+    @Transactional
     public TaskReadDto partialUpdate(Map<String, Object> updates, Long id) {
-        Task task = taskRepository.findById(id).get();
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Somehow element is not here!"));
         Field[] postFields = Task.class.getDeclaredFields();
         for (Field postField : postFields) {
             updates.forEach((key, value) -> {
                 if (key.equalsIgnoreCase(postField.getName())) {
                     try {
-                        if(key.equals("type")) value = NodeType.valueOf(value.toString());
+                        if (key.equals("type")) value = NodeType.valueOf(value.toString());
                         final Field declaredField = Task.class.getDeclaredField(key);
                         declaredField.setAccessible(true);
                         declaredField.set(task, value);
@@ -128,3 +95,4 @@ public class TaskService {
         return taskReadMapper.map(taskRepository.save(task));
     }
 }
+

@@ -5,21 +5,20 @@ import com.parfenov.todo.entity.Task;
 import com.parfenov.todo.entity.User;
 import com.parfenov.todo.repository.TaskRepository;
 import com.parfenov.todo.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class TaskMapper implements Mapper<TaskCreateEditDto, Task> {
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
 
-    public TaskMapper(UserRepository userRepository, TaskRepository taskRepository) {
-        this.userRepository = userRepository;
-        this.taskRepository = taskRepository;
-    }
-
     @Override
     public Task map(TaskCreateEditDto object) {
-        User user = userRepository.findById(object.getUserId()).get();
+        User user = userRepository.findById(object.getUserId())
+                .orElseThrow(() -> new UsernameNotFoundException("Somehow there's no User for your task!"));
         Task parentTask = getRealParentOrMakeDummy(object);
         Task task = new Task();
         task.setId(object.getNodeId());
@@ -33,7 +32,7 @@ public class TaskMapper implements Mapper<TaskCreateEditDto, Task> {
     }
 
     private Task getRealParentOrMakeDummy(TaskCreateEditDto object) {
-        if(object.getNodeId() == 0) return null;
+        if (object.getNodeId() == 0) return null;
         return taskRepository.findById(object.getParentId())
                 .orElse(Task.builder()
                         .id(object.getParentId())

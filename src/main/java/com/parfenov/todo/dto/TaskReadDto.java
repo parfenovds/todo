@@ -1,10 +1,8 @@
 package com.parfenov.todo.dto;
 
-import com.parfenov.todo.entity.NodeType;
 import lombok.Builder;
 import lombok.Value;
 
-import java.util.Set;
 @Value
 @Builder
 public class TaskReadDto {

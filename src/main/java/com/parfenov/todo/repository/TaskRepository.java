@@ -7,25 +7,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
-//    @Override
-//    Optional<Task> findById(Long id);
-//
-//    @Override
-//    void delete(Task entity);
-//
-//    @Override
-//    void deleteById(Long id);
-//
-//    @Override
-//    <S extends Task> List<S> saveAll(Iterable<S> entities);
-//
-//    @Override
-//    <S extends Task> S save(S entity);
-
-    @Transactional
+    @Transactional(readOnly = true)
     @Query(value = "WITH RECURSIVE children AS (SELECT id, user_id, parent_id, name, text, type, done " +
                    "                            FROM task " +
                    "                            WHERE parent_id IS NULL " +

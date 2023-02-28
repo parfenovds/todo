@@ -1,6 +1,5 @@
 package com.parfenov.todo.dto;
 
-import com.parfenov.todo.entity.Role;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Value;
 import lombok.experimental.FieldNameConstants;

@@ -14,6 +14,7 @@ import java.util.Optional;
 @Component
 public class UserCreateEditMapper implements Mapper<UserCreateEditDto, User> {
     private final PasswordEncoder passwordEncoder;
+
     @Override
     public User map(UserCreateEditDto object) {
         User user = User.builder()
