@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Fragments</title>
+</head>
+<body>
+<div th:fragment="navbar">
+    <script>
+        async function postLogout(headern, token) {
+            console.log(headern);
+            console.log(token);
+            let quest = {
+            };
+
+            let response = await fetch('/logout', {
+                method: 'POST',
+                headers: {
+                    "X-CSRF-TOKEN": token
+                    // 'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(quest)
+            });
+            window.location = response.url;
+        }
+    </script>
+    <ul id="nav">
+<!--        <li><a href="/static">Home</a></li>-->
+        <!--        <li><a href="/static">Your quests</a></li>-->
+        <!--        <li><a href="/static">All quests</a></li>-->
+
+        <div sec:authorize="isAuthenticated()">
+            <li><a th:href="|javascript:postLogout('${_csrf.headerName}', '${_csrf.token}');|"><span th:text="|Logout for ${#authentication.principal.username}|"></span></a></li>
+        </div>
+        <!--  </c:if>-->
+        <!--  <c:if test="${sessionScope.user == null}">-->
+        <div sec:authorize="isAnonymous()">
+            <li><a href="/login">Login</a></li>
+            <li><a href="/users/registration">Registration</a></li>
+        </div>
+        <!--  </c:if>-->
+    </ul>
+</div>
+<div th:fragment="styles">
+    <link th:href="@{/css/style.css}" rel="stylesheet"/>
+</div>
+<div th:fragment="meta">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta name="userId" th:content="${user.id}"/>
+</div>
+</body>
+</html>

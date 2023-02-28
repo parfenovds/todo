@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <div th:insert="~{/fragment :: meta}"></div>
+    <div th:insert="~{/fragment :: styles}"></div>
+    <title>Hello</title>
+</head>
+<body>
+<div th:insert="~{fragment :: navbar}"></div>
+<div id="tree-container"></div>
+<div id="rightDiv"></div>
+
+<!--<link rel="stylesheet" type="text/css" th:href='@{/css/style.css}'>-->
+<!--<p><span th:text="${tree}">Dummy text</span></p>-->
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<!--<script src="https://d3js.org/d3.v4.min.js"></script>-->
+<div id="someId"></div>
+<script th:src="@{/js/tree.js}"></script>
+</body>
+</html>
