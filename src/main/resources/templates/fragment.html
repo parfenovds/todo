@@ -17,7 +17,6 @@
                 method: 'POST',
                 headers: {
                     "X-CSRF-TOKEN": token
-                    // 'Content-Type': 'application/json;charset=utf-8'
                 },
                 body: JSON.stringify(quest)
             });
@@ -25,20 +24,14 @@
         }
     </script>
     <ul id="nav">
-<!--        <li><a href="/static">Home</a></li>-->
-        <!--        <li><a href="/static">Your quests</a></li>-->
-        <!--        <li><a href="/static">All quests</a></li>-->
-
         <div sec:authorize="isAuthenticated()">
-            <li><a th:href="|javascript:postLogout('${_csrf.headerName}', '${_csrf.token}');|"><span th:text="|Logout for ${#authentication.principal.username}|"></span></a></li>
+            <li><a th:href="|javascript:postLogout('${_csrf.headerName}', '${_csrf.token}');|">
+                <span th:text="|Logout for ${#authentication.principal.username}|"></span></a></li>
         </div>
-        <!--  </c:if>-->
-        <!--  <c:if test="${sessionScope.user == null}">-->
         <div sec:authorize="isAnonymous()">
             <li><a href="/login">Login</a></li>
             <li><a href="/users/registration">Registration</a></li>
         </div>
-        <!--  </c:if>-->
     </ul>
 </div>
 <div th:fragment="styles">
