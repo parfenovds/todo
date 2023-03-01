@@ -3,7 +3,7 @@
 TODO-лист в виде дерева
 
 Технологии:
-Java, Spring, Spring Boot, Postgresql, Spring Data, Thymeleaf, Maven.
+Java, Spring, Spring Boot, Spring Security, Spring Data, Thymeleaf,  Postgresql, Maven.
 Контроллеры REST, при необходимости возврата html-странички использовались также обычные @Controller.
 Фронт базируется на vanilla js, d3.js и [этом графе](https://gist.github.com/robschmuecker/7880033).
 Идея навеяна в основном [Zettelkasten](https://en.wikipedia.org/wiki/Zettelkasten).
