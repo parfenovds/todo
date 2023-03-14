@@ -34,7 +34,7 @@ public class TaskMapper implements Mapper<TaskCreateEditDto, Task> {
     private Task getRealParentOrMakeDummy(TaskCreateEditDto object) {
         if (object.getNodeId() == 0) return null;
         return taskRepository.findById(object.getParentId())
-                .orElse(Task.builder()
+                .orElseGet(() -> Task.builder()
                         .id(object.getParentId())
                         .build());
     }

@@ -40,8 +40,8 @@ public class TaskRestController {
 
     @PatchMapping("/{id}")
     @ResponseBody
-    public TaskReadDto partialUpdate(@RequestBody Map<String, Object> updates, @PathVariable Long id) {
-        return taskService.partialUpdate(updates, id);
+    public TaskReadDto partialUpdate(@RequestBody TaskCreateEditDto task, @PathVariable Long id) {
+        return taskService.partialUpdate(task, id);
     }
 
     @PostMapping("/json")

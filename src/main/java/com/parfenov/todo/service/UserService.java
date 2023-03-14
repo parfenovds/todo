@@ -46,36 +46,33 @@ public class UserService implements UserDetailsService {
     @Transactional(readOnly = true)
     public UserReadDto findUserReadDtoByUsername(String username) {
         return userRepository.findByUsername(username)
-                .map(user -> UserReadDto.builder()
-                        .id(user.getId())
-                        .username(user.getUsername())
-                        .build())
+                .map(UserService::toUserReadDto)
                 .orElseThrow(() -> new UsernameNotFoundException("Failed to retrieve user: " + username));
     }
+
     @Transactional(readOnly = true)
     public Optional<UserReadDto> findOptionalUserReadDtoByUsername(String username) {
         return userRepository.findByUsername(username)
-                .map(user -> UserReadDto.builder()
-                        .id(user.getId())
-                        .username(user.getUsername())
-                        .build());
+                .map(UserService::toUserReadDto);
     }
+
     @Transactional(readOnly = true)
     public List<UserReadDto> findAll() {
         return userRepository.findAll().stream()
-                .map(user -> UserReadDto.builder()
-                        .id(user.getId())
-                        .username(user.getUsername())
-                        .build()
-                )
+                .map(UserService::toUserReadDto)
                 .collect(Collectors.toList());
     }
+
     @Transactional(readOnly = true)
     public Optional<UserReadDto> findById(Long id) {
-        return userRepository.findById(id).map(user -> UserReadDto.builder()
-                        .id(user.getId())
-                        .username(user.getUsername())
-                        .build());
+        return userRepository.findById(id).map(UserService::toUserReadDto);
+    }
+
+    private static UserReadDto toUserReadDto(com.parfenov.todo.entity.User user) {
+        return UserReadDto.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .build();
     }
 
 

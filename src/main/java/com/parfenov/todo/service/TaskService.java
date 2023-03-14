@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.parfenov.todo.dto.TaskCreateEditDto;
 import com.parfenov.todo.dto.TaskReadDto;
-import com.parfenov.todo.entity.NodeType;
 import com.parfenov.todo.entity.Task;
 import com.parfenov.todo.mapper.TaskMapper;
 import com.parfenov.todo.mapper.TaskReadMapper;
@@ -15,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 @Service
@@ -74,25 +72,13 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskReadDto partialUpdate(Map<String, Object> updates, Long id) {
+    public TaskReadDto partialUpdate(TaskCreateEditDto taskCreateEditDto, Long id) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Somehow element is not here!"));
-        Field[] postFields = Task.class.getDeclaredFields();
-        for (Field postField : postFields) {
-            updates.forEach((key, value) -> {
-                if (key.equalsIgnoreCase(postField.getName())) {
-                    try {
-                        if (key.equals("type")) value = NodeType.valueOf(value.toString());
-                        final Field declaredField = Task.class.getDeclaredField(key);
-                        declaredField.setAccessible(true);
-                        declaredField.set(task, value);
-                    } catch (IllegalAccessException | NoSuchFieldException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            });
-        }
+        Optional.ofNullable(taskCreateEditDto.getName()).ifPresent(task::setName);
+        Optional.ofNullable(taskCreateEditDto.getDone()).ifPresent(task::setDone);
+        Optional.ofNullable(taskCreateEditDto.getText()).ifPresent(task::setText);
+        Optional.ofNullable(taskCreateEditDto.getType()).ifPresent(task::setType);
         return taskReadMapper.map(taskRepository.save(task));
     }
 }
-
